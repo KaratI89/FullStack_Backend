@@ -17,6 +17,7 @@ const unknownEndepoint = (req, res) => {
 app.use(express.json())
 app.use(requestLoger)
 app.use(cors())
+app.use(express.static('dist'))
 
 let notes = [
     {
