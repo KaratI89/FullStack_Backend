@@ -1,7 +1,22 @@
 const express = require('express')
+const cors = require('cors')
 const app = express()
 
+const requestLoger = (req, res, next) => {
+    console.log('Method:', req.method);
+    console.log('Path:', req.path);
+    console.log('Body:', req.body);
+    console.log('---');
+    next()
+}
+
+const unknownEndepoint = (req, res) => {
+    res.status(400).send({error: 'unknown endepoint'})
+}
+
 app.use(express.json())
+app.use(requestLoger)
+app.use(cors())
 
 let notes = [
     {
@@ -23,6 +38,11 @@ let notes = [
 app.get('/', (request, response) => {
     response.send('<h1>Hello</h1>')
 })
+
+app.get('/api/notes/', (request, response) => {
+  response.json(notes)
+})
+
 app.get('/api/notes/:id', (request, response) => {
     const id = Number(request.params.id)
     console.log(id);
@@ -34,7 +54,7 @@ app.get('/api/notes/:id', (request, response) => {
         response.json(note)
     }
     else {
-        response.statusMessage = "Note found message"
+        response.statusMessage = "Not found message"
         response.status(404).end()
     }
     console.log(note);
@@ -72,8 +92,9 @@ app.post('/api/notes', (request, response) =>{
     notes = notes.concat(note)
     response.json(note)
 })
+app.use(unknownEndepoint)
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
