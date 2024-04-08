@@ -1,7 +1,12 @@
 const express = require('express') // определяться должно только так иначе будет ошибка
+const morgan = require('morgan')
 const app = express()
 
+morgan.token('body', req => {
+  return JSON.stringify(req.body)
+})
 app.use(express.json())
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 let people = [
     { 
@@ -61,7 +66,7 @@ const getRandomId = () => {
 
 app.post('/api/persons', (request, response) => {
     const personData = request.body
-    console.log(people.find(person => person.name === personData.name));
+    //console.log(people.find(person => person.name === personData.name));
     if(
         !personData.name 
         || !personData.number 
@@ -78,6 +83,7 @@ app.post('/api/persons', (request, response) => {
     people = people.concat(person)
     response.json(person)
 })
+
 
 const PORT = 3001
 app.listen(PORT, () => {
