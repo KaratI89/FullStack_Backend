@@ -1,22 +1,23 @@
 {
-  "name": "phonebook",
+  "name": "lesson",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:ui": "rm -rf dist && cd /D/Coding/FullStackOpen/Part3/DeploingAppToInternet/lesson/ && npm run build && cp -r dist /D/Coding/FullStack_backend/part3/NodeJsAndExpress/lesson/",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.19.2",
-    "mongoose": "^8.3.1",
-    "morgan": "^1.10.0"
+    "express": "^4.18.2",
+    "mongoose": "^8.3.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.0.2"
   }
 }
