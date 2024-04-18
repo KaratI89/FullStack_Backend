@@ -37,13 +37,13 @@ const url = `mongodb+srv://karat0zero:${password}@cluster0.5ktkdqh.mongodb.net/n
     ]
 })
 
-  note.save().then(result => {
-    console.log('note saved!')
-    mongoose.connection.close()
-  })
-  // Note.find({}).then(result => {
-  //   result.forEach(note => {
-  //     console.log(note)
-  //   })
+  // note.save().then(result => {
+  //   console.log('note saved!')
   //   mongoose.connection.close()
   // })
+  Note.find({}).then(result => {
+    result.forEach(note => {
+      console.log(note)
+    })
+    mongoose.connection.close()
+  })
