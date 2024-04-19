@@ -27,13 +27,18 @@ const url = `mongodb+srv://karat0zero:${password}@cluster0.5ktkdqh.mongodb.net/p
         number: number,
   })
 
-  person.save().then(result => {
-    console.log(`added ${name} number ${number} to phonebook`)
-    mongoose.connection.close()
-  })
-  // Person.find({}).then(result => {
-  //   result.forEach(person => {
-  //     console.log(person)
-  //   })
-  //   mongoose.connection.close()
-  // })
+  if (process.argv.length < 4) {
+    Person.find({}).then(result => {
+      console.log('Phonebook')
+      result.forEach(person => {
+        console.log(person.name +' '+ person.number)
+      })
+      mongoose.connection.close()
+    })
+  }
+  else {
+    person.save().then(result => {
+      console.log(`added ${name} number ${number} to phonebook`)
+      mongoose.connection.close()
+    })
+  }
