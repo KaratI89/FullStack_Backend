@@ -14,12 +14,12 @@ mongoose.connect(url)
     })
 
 const noteSchema = new mongoose.Schema({
-  notes: [
-    {
+//  notes: [
+    //{
     content: String,
     important: Boolean,
-    },
-  ]
+    //},
+//  ]
 })
 noteSchema.set('toJSON', {
     transform: (document, returnedObject) => {
