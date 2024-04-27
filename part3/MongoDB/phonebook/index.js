@@ -31,11 +31,13 @@ app.get('/api/persons', (request, response) => {
 //     })
 // })
 
-// app.delete('/api/persons/:id', (request, response) => {
-//     const id = Number(request.params.id)
-//     people = people.filter(person=> person.id !== id)
-//     response.status(204).end()
-// })
+app.delete('/api/persons/:id', (request, response, next) => {
+    Person.findByIdAndDelete(request.params.id)
+    .then(result => {
+        response.status(200).end()
+    })
+    .catch(error => next(error))
+})
 
 // const getRandomId = () => {
 //     const min = Math.ceil(1)
@@ -58,6 +60,42 @@ app.post('/api/persons', (request, response) => {
         response.json(savedPerson)
     )
 })
+
+app.put('/api/persons/:id', (request, response, next) => {
+    const personData = request.body
+
+    const ChangedPerson = {
+        name: personData.name,
+        number: personData.number
+    }
+    const DbPerson = {
+        name: String,
+        number: String
+    }
+    Person.findById(request.params.id)
+    .then(person => {
+        DbPerson.name = person.name
+    })
+    
+    // console.log(ChangedPerson.name, typeof ChangedPerson.name);
+    // console.log(DbPerson.name, typeof DbPerson.name);
+    if (DbPerson.name === ChangedPerson.name) {
+    console.log('we are in the if');
+    Person.findByIdAndUpdate(request.params.id, ChangedPerson, {new: true})
+    .then(updatedPerson => {response.json(updatedPerson)})
+    .catch(error => console.log(error))
+    }
+    })
+
+const errorHandler = (error, request, response, next) => {
+     if (error.name === 'CastError') {
+        return response.status(400).send({error: 'malformatted id'})
+     }
+    next(error)
+}
+
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
