@@ -19,17 +19,19 @@ app.get('/api/persons', (request, response) => {
         response.json(persons)
     })
 })
-// app.get('/info', (request, response) =>{
-//     const getPersonNumber = people.length
-//     const getData = new Date()
-//     response.send(`Phone book has info for ${getPersonNumber} people</br> ${getData}`)
-// })
+app.get('/info', (request, response) =>{
+  Person.find({}).then(persons => {
+    const getPersonNumber = persons.length
+    const getData = new Date()
+    response.send(`Phone book has info for ${getPersonNumber} people</br> ${getData}`)
+  })
+})
 
-// app.get('/api/persons/:id', (request, response) => {
-//     Person.findById(request.params.id).then(person => {
-//         response.json(person)
-//     })
-// })
+app.get('/api/persons/:id', (request, response) => {
+    Person.findById(request.params.id).then(person => {
+        response.json(person)
+    })
+})
 
 app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndDelete(request.params.id)
@@ -68,29 +70,16 @@ app.put('/api/persons/:id', (request, response, next) => {
         name: personData.name,
         number: personData.number
     }
-    const DbPerson = {
-        name: String,
-        number: String
-    }
-    Person.findById(request.params.id)
-    .then(person => {
-        DbPerson.name = person.name
-    })
     
-    // console.log(ChangedPerson.name, typeof ChangedPerson.name);
-    // console.log(DbPerson.name, typeof DbPerson.name);
-    if (DbPerson.name === ChangedPerson.name) {
-    console.log('we are in the if');
     Person.findByIdAndUpdate(request.params.id, ChangedPerson, {new: true})
     .then(updatedPerson => {response.json(updatedPerson)})
     .catch(error => console.log(error))
-    }
     })
 
 const errorHandler = (error, request, response, next) => {
-     if (error.name === 'CastError') {
-        return response.status(400).send({error: 'malformatted id'})
-     }
+    if (error.name === 'CastError') {
+      return response.status(400).send({error: 'malformatted id'})
+    }
     next(error)
 }
 
