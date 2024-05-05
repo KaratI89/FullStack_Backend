@@ -17,12 +17,11 @@ const personSchema = new mongoose.Schema({
       },
       number: {
         type: String,
-        minLength: 9,
         validate: {
           validator: (number) => {
-            return /\d{2,3}-\d+/.test(number)
+            return number.length > 9 && /\d{2,3}-\d+/.test(number)
           },
-          message: "Number should be the 123-456789 format"
+          message: "Number should be the 123-45678 format"
         },
         required: true
       }
