@@ -11,34 +11,34 @@ const number = process.argv[4]
 
 const url = `mongodb+srv://karat0zero:${password}@cluster0.5ktkdqh.mongodb.net/phonebookApp?retryWrites=true&w=majority`
 
-  mongoose.set('strictQuery',false)
+mongoose.set('strictQuery',false)
 
-  mongoose.connect(url)
+mongoose.connect(url)
 
-  const noteSchema = new mongoose.Schema({
-      name: String,
-      number: String,
-  })
+const noteSchema = new mongoose.Schema({
+  name: String,
+  number: String,
+})
 
-  const Person = mongoose.model('Person', noteSchema)
+const Person = mongoose.model('Person', noteSchema)
 
-  const person = new Person({
-        name:   name,
-        number: number,
-  })
+const person = new Person({
+  name:   name,
+  number: number,
+})
 
-  if (process.argv.length < 4) {
-    Person.find({}).then(result => {
-      console.log('Phonebook')
-      result.forEach(person => {
-        console.log(person.name +' '+ person.number)
-      })
-      mongoose.connection.close()
+if (process.argv.length < 4) {
+  Person.find({}).then(result => {
+    console.log('Phonebook')
+    result.forEach(person => {
+      console.log(person.name +' '+ person.number)
     })
-  }
-  else {
-    person.save().then(result => {
-      console.log(`added ${name} number ${number} to phonebook`)
-      mongoose.connection.close()
-    })
-  }
+    mongoose.connection.close()
+  })
+}
+else {
+  person.save().then(result => {
+    console.log(`added ${name} number ${number} to phonebook`)
+    mongoose.connection.close()
+  })
+}
