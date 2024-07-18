@@ -21,7 +21,7 @@ notesRouter.get('/:id', (request, response, next) => {
 
 notesRouter.delete('/:id', (request, response, next) => {
   Note.findByIdAndDelete(request.params.id)
-    .then(result => {
+    .then(() => {
       response.status(200).end()
     })
     .catch(error => next(error))
