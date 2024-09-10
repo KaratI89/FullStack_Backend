@@ -90,6 +90,6 @@ describe('total likes', () => {
 describe('favorite blog', () => {
 
   test('of a bigger list', () => {
-    assert.strictEqual(listHelper.favoriteBlog(listWithLotsOfBlogs), 12)
+    assert.deepStrictEqual(listHelper.favoriteBlog(listWithLotsOfBlogs), listWithLotsOfBlogs[2])
   })
 })

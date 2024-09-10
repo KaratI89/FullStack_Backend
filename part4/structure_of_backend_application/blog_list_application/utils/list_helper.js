@@ -20,8 +20,16 @@ const favoriteBlog = (blogs) => {
     console.log('cur', current);
     return current.likes > previous.likes ? current : previous
   }
-  console.log(blogs.reduce(reducer,0));
-    return blogs.reduce(reducer,0)
+  const favoriteBlog = blogs.reduce(reducer,blogs[0])
+  console.log(favoriteBlog);
+  return {
+    _id: favoriteBlog._id,
+    title: favoriteBlog.title,
+    author: favoriteBlog.author,
+    url: favoriteBlog.url,
+    likes: favoriteBlog.likes,
+    __v: favoriteBlog.__v
+  }
 }
 
 module.exports = { dummy , totalLikes, favoriteBlog }
