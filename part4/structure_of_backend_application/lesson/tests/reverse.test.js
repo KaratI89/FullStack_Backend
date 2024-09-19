@@ -10,9 +10,9 @@ test('reverse of a', () => {
 })
 
 test('reverse of react', () => {
-  const result = reverse('react')
+  const result = reverse('tcaer')
 
-  assert.strictEqual(result, 'tkaer')
+  assert.strictEqual(result, 'react')
 })
 
 test('reverse of saippuakauppias', () => {
