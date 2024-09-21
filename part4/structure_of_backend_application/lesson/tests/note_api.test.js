@@ -1,5 +1,6 @@
 const { test, after, beforeEach } = require('node:test')
 const mongoose = require('mongoose')
+const helper = require('./test_helper')
 const supertest = require('supertest')
 const app = require('../app')
 const assert = require('node:assert')
@@ -7,22 +8,11 @@ const Note = require('../models/note')
 
 const api = supertest(app)
 
-const initialNotes = [
-  {
-    content: 'HTML is easy',
-    important: false,
-  },
-  {
-    content: 'Browser can execute only JavaScript',
-    importent: true,
-  },
-]
-
 beforeEach(async () => {
   await Note.deleteMany({})
-  let noteObject = new Note(initialNotes[0])
+  let noteObject = new Note(helper.initialNotes[0])
   await noteObject.save()
-  noteObject = new Note(initialNotes[1])
+  noteObject = new Note(helper.initialNotes[1])
   await noteObject.save()
 })
 
@@ -35,13 +25,13 @@ test('notes are returned as json', async () => {
 
 test('there are two notes', async () => {
   const response = await api.get('/api/notes')
-  assert.strictEqual(response.body.length, initialNotes.length)
+  assert.strictEqual(response.body.length, helper.initialNotes.length)
 })
 
 test('the first note is about HTTP methodes', async () => {
   const response = await api.get('/api/notes')
   const contents = response.body.map(e => e.content)
-  assert(contents.includes(initialNotes[0].content))
+  assert(contents.includes(helper.initialNotes[0].content))
 })
 
 test('a valid note can be added', async () => {
@@ -56,12 +46,10 @@ test('a valid note can be added', async () => {
     .expect(201)
     .expect('Content-Type', /application\/json/)
 
-  const response = await api.get('/api/notes')
+  const noteAtEnd = await helper.notesInDb()
+  assert.strictEqual(noteAtEnd.length, helper.initialNotes.length + 1)
 
-  const contents = response.body.map(r => r.content)
-
-  assert.strictEqual(response.body.length, initialNotes.length + 1)
-
+  const contents = noteAtEnd.map(n => n.content)
   assert(contents.includes('async/await simplifies making async calls'))
 })
 
@@ -75,11 +63,17 @@ test.only('note without content is not added', async () => {
     .send(newNote)
     .expect(400)
 
-  const response = await api.get('/api/notes/')
-
-  assert.strictEqual(response.body.length, initialNotes.length)
-
+  const notesAtEnd = await helper.notesInDb()
+  assert.strictEqual(notesAtEnd.length, helper.initialNotes.length)
 })
+
+//test('a specific note can be viewed', async () => {
+//  const notesAtStart = await helper.notesInDb()
+//
+//  const noteToView = notesAtStart[0]
+//
+//  const result
+//})
 
 after(async () => {
   await mongoose.connection.close()
