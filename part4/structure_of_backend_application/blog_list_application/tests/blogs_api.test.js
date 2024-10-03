@@ -2,6 +2,7 @@ const { test, after, beforeEach } = require('node:test')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
+const assert = require('node:assert')
 const Blog = require('../models/blog')
 
 const api = supertest(app)
@@ -29,12 +30,22 @@ beforeEach(async () => {
   await blogObject.save()
 })
 
-test.only('blog list return as json', async () => {
+test('blog list return as json', async () => {
   await api
     .get('/api/blogs')
     .expect(200)
     .expect('Content-Type', /application\/json/)
 })
+
+test.only('unique identifier is named id', async () => {
+  const resultBlogs = await api
+    .get('/api/blogs')
+    .expect(200)
+  console.log(resultBlogs.body)
+  const identification = Object.keys(resultBlogs.body[0])[4]
+  assert.strictEqual(identification, 'id')
+})
+
 
 after(async () => {
   await mongoose.connection.close()
