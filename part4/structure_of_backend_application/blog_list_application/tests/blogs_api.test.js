@@ -19,7 +19,6 @@ const initialBlogs = [
     author: 'Foodslier',
     url: 'www.tastyFood.com',
     likes: 1,
-    id: 999
   }
 ]
 
@@ -38,7 +37,7 @@ test('blog list return as json', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
-test.only('unique identifier is named id', async () => {
+test('unique identifier is named id', async () => {
   const resultBlogs = await api
     .get('/api/blogs')
     .expect(200)
@@ -48,7 +47,25 @@ test.only('unique identifier is named id', async () => {
 })
 
 test.only('a valid post can be added', async () => {
+  const newPost = {
+    title: 'Shoping for clothes',
+    author: 'Shopaholic',
+    url: 'www.shopaholic.com',
+    likes: 999999,
+  }
 
+  await api
+    .post('/api/blogs')
+    .send(newPost)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const listBlogInTheEnd = await api.get('/api/blogs')
+  console.log(listBlogInTheEnd.body);
+  
+  assert.strictEqual(listBlogInTheEnd.body.length, initialBlogs.length + 1)
+
+  assert.strictEqual(listBlogInTheEnd.body[listBlogInTheEnd.body.length - 1].title, newPost.title)
 })
 
 after(async () => {
