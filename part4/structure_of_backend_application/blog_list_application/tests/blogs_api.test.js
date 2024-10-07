@@ -9,6 +9,7 @@ const api = supertest(app)
 
 const initialBlogs = [
   {
+    id: '111',
     title: 'Crafting the nuclear material',
     author: 'Doctor Evil',
     url: 'www.bigBoom.com',
@@ -18,7 +19,8 @@ const initialBlogs = [
     title: 'Breeding the ground worms',
     author: 'Foodslier',
     url: 'www.tastyFood.com',
-    likes: 1
+    likes: 1,
+    id: 999
   }
 ]
 
@@ -42,10 +44,13 @@ test.only('unique identifier is named id', async () => {
     .get('/api/blogs')
     .expect(200)
   console.log(resultBlogs.body)
-  const identification = Object.keys(resultBlogs.body[0])[4]
-  assert.strictEqual(identification, 'id')
+  const validName = resultBlogs.body.map(n => Object.keys(n).includes('id')).includes(false)  
+  assert(!validName)
 })
 
+test.only('a valid post can be added', async () => {
+  
+})
 
 after(async () => {
   await mongoose.connection.close()
