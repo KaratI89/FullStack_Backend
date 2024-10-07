@@ -9,7 +9,6 @@ const api = supertest(app)
 
 const initialBlogs = [
   {
-    id: '111',
     title: 'Crafting the nuclear material',
     author: 'Doctor Evil',
     url: 'www.bigBoom.com',
@@ -49,7 +48,7 @@ test.only('unique identifier is named id', async () => {
 })
 
 test.only('a valid post can be added', async () => {
-  
+
 })
 
 after(async () => {
