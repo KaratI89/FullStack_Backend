@@ -4,8 +4,8 @@ const dummy = (blogs) => {
 
 const totalLikes = (blogs) => {
   const reducer = (sum, item) => {
-    console.log(sum);
-    console.log(item.likes);
+    // console.log(sum);
+    // console.log(item.likes);
     return sum + item.likes
   }
   
@@ -16,12 +16,12 @@ const totalLikes = (blogs) => {
 
 const favoriteBlog = (blogs) => {
   const reducer  = (previous, current) => {
-    console.log('prev',previous );
-    console.log('cur', current);
+    // console.log('prev',previous );
+    // console.log('cur', current);
     return current.likes > previous.likes ? current : previous
   }
   const favoriteBlog = blogs.reduce(reducer,blogs[0])
-  console.log(favoriteBlog);
+  // console.log(favoriteBlog);
   return {
     _id: favoriteBlog._id,
     title: favoriteBlog.title,

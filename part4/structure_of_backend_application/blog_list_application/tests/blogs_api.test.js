@@ -12,7 +12,7 @@ const initialBlogs = [
     title: 'Crafting the nuclear material',
     author: 'Doctor Evil',
     url: 'www.bigBoom.com',
-    //likes: 666
+    likes: 666
   },
   {
     title: 'Breeding the ground worms',
@@ -41,7 +41,7 @@ test('unique identifier is named id', async () => {
   const resultBlogs = await api
     .get('/api/blogs')
     .expect(200)
-  console.log(resultBlogs.body)
+  // console.log(resultBlogs.body)
   const validName = resultBlogs.body.map(n => Object.keys(n).includes('id')).includes(false)  
   assert(!validName)
 })
@@ -61,7 +61,7 @@ test('a valid post can be added', async () => {
     .expect('Content-Type', /application\/json/)
 
   const listBlogInTheEnd = await api.get('/api/blogs')
-  console.log(listBlogInTheEnd.body);
+  // console.log(listBlogInTheEnd.body);
   
   assert.strictEqual(listBlogInTheEnd.body.length, initialBlogs.length + 1)
 
@@ -79,11 +79,11 @@ test('likes property is defined', async() => {
     .send(blogWithoutLikes)
     .expect(201)
 
-  console.log(verifiableBlogs.body);
+  // console.log(verifiableBlogs.body);
   assert.strictEqual(verifiableBlogs.body.likes, 0)
 })
 
-test.only('missing request properties have a status code Bad Request', async() => {
+test('missing request properties have a status code Bad Request', async() => {
   const blogWithoutProperties = {
     author: 'DArtagnan',
   }
@@ -91,7 +91,29 @@ test.only('missing request properties have a status code Bad Request', async() =
     .post('/api/blogs')
     .send(blogWithoutProperties)
     .expect(400)    
-  console.log(result.body);
+  // console.log(result.body);
+})
+
+test('the blog was deleted', async() => {
+  const blogsAtStart = await Blog.find({})
+  const deletedBlog = blogsAtStart.map(blog => blog.toJSON())
+  await api
+    .delete(`/api/blogs/${deletedBlog[0].id}`)
+    .expect(204)
+
+  const blogsAtEnd = await Blog.find({})
+  // console.log(blogsAtEnd);
+  
+  assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1)
+})
+
+test.only('the blog was changed', async() => {
+  const blogAtStart = await Blog.find({})
+  const changedBlog = {...blogAtStart.map(blog => blog.toJSON())[0], likes: 999}
+  const updatedBlog = await api
+    .put(`/api/blogs/${changedBlog.id}`)
+    .send(changedBlog)
+  assert.strictEqual(changedBlog.likes, updatedBlog.body.likes)
 })
 
 after(async () => {
