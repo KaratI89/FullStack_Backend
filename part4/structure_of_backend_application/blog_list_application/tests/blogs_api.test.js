@@ -96,9 +96,9 @@ test('missing request properties have a status code Bad Request', async() => {
 
 test('the blog was deleted', async() => {
   const blogsAtStart = await Blog.find({})
-  const deletedBlog = blogsAtStart.map(blog => blog.toJSON())
+  const deletedBlog = blogsAtStart.map(blog => blog.toJSON())[0]  
   await api
-    .delete(`/api/blogs/${deletedBlog[0].id}`)
+    .delete(`/api/blogs/${deletedBlog.id}`)
     .expect(204)
 
   const blogsAtEnd = await Blog.find({})
