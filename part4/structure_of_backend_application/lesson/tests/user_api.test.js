@@ -9,7 +9,7 @@ const User = require('../models/user')
 
 const api = supertest(app)
 
-describe.only('when there is initially one user in db', () => {
+describe('when there is initially one user in db', () => {
   beforeEach(async () => {
     await User.deleteMany({})
     console.log('users was cleared')
@@ -43,7 +43,7 @@ describe.only('when there is initially one user in db', () => {
     console.log(userNames)
     assert(userNames.includes(newUser.name))
   })
-  test.only('creation fails with proper statuscode and message if username already taken', async () => {
+  test('creation fails with proper statuscode and message if username already taken', async () => {
     const usersAtStart = await helper.usersInDb()
 
     const newUser = {
@@ -62,7 +62,7 @@ describe.only('when there is initially one user in db', () => {
     assert(result.body.error.includes('expected `username` to be unique'))
 
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
-})
+  })
 })
 
 after(async () => {
