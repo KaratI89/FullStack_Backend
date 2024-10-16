@@ -36,7 +36,7 @@ test('the first note is about HTTP methodes', async () => {
   assert(contents.includes(helper.initialNotes[0].content))
 })
 
-test.only('a valid note can be added', async () => {
+test.only('a valid note can be added', async () => { //не будет работать, изменена обработка в контроллере
   const newNote = {
     content: 'async/await simplifies making async calls',
     important: true,
