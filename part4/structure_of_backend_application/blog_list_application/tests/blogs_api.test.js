@@ -21,7 +21,7 @@ const initialBlogs = [
     likes: 1,
   }
 ]
-
+//!!!нужно переделать на Promise.all
 beforeEach(async () => {
   await Blog.deleteMany({})
   let blogObject = new Blog(initialBlogs[0])
@@ -107,7 +107,7 @@ test('the blog was deleted', async() => {
   assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1)
 })
 
-test.only('the blog was changed', async() => {
+test('the blog was changed', async() => {
   const blogAtStart = await Blog.find({})
   const changedBlog = {...blogAtStart.map(blog => blog.toJSON())[0], likes: 999}
   const updatedBlog = await api
