@@ -1,7 +1,17 @@
 const mongoose = require('mongoose')
 
 const userSchema = mongoose.Schema({
-  username: String,
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+    validate: {
+      validator: (username) => {
+        return username.length > 3
+      },
+      message: 'username should be at least 3 characters'
+    }
+  },
   passwordHash: String,
   name: String
 })

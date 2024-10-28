@@ -40,7 +40,7 @@ describe.only('Request with a missing username', () => {
       .send(newUser)
     // console.log(result.body.error);
     
-    assert.strictEqual(result.body.error, '"username" or "password" has been missed')
+    assert.strictEqual(result.body.error, 'User validation failed: username: Path `username` is required.')
   })
   
   test.only('User was not created', async () => {
@@ -91,7 +91,7 @@ describe.only('Request with a non-unique username', () => {
       .send(newUser)
     // console.log(result.body.error);
 
-    assert.strictEqual(result.body.error, 'username is already taken')
+    assert(result.body.error.includes('`username` should be unique'))
   })
 
   test.only('Users was not created', async () => {
@@ -144,7 +144,7 @@ describe.only('Request with a short password', () => {
       .send(newUser)
     // console.log(result.body.error);
 
-    assert.strictEqual(result.body.error, 'password and username must be at least 3 characters')
+    assert(result.body.error.includes( 'password should be at least 3 characters' ))
   })
 
   test.only('Users was not created', async () => {
