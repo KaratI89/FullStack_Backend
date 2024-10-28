@@ -11,18 +11,13 @@ userRouter.post('/', async (request, response) => {
     return response.status(400).json({ error: 'password should be at least 3 characters'})
   } 
 
-  // const retrievedDbUsers = await User.find({})
-  // if (retrievedDbUsers.map(users => users.username).includes(username)) {
-  //   return response.status(400).json({error: 'username is already taken'})
-  // }
-
   const saltRounds = 10
   const passwordHash = await bcrypt.hash(password, saltRounds)
 
   const user = new User({
     username,
     name,
-    passwordHash
+    passwordHash,
   })
 
   const savedUser = await user.save()
@@ -31,7 +26,7 @@ userRouter.post('/', async (request, response) => {
 })
 
 userRouter.get('/', async (request,response) =>{
-  const users = await User.find({})
+  const users = await User.find({}).populate('blogs', {url: 1, title: 1, author: 1 })
   response.json(users)
 })
 
