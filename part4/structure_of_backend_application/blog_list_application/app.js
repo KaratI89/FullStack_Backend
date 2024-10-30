@@ -12,7 +12,7 @@ const mongoose = require('mongoose')
 
 
   mongoose.connect(config.MONGODB_URI)
-    .then(() => logger.info(`Connect to ${config.MONGODB_URI}`))
+    .then(() => logger.info(`Connect to MongoDB ${config.MONGODB_URI}`))
     .catch((error) => logger.error('error connection to mongodb', error.message))
 
   app.use(cors())

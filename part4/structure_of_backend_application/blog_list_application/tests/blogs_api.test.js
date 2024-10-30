@@ -4,30 +4,16 @@ const supertest = require('supertest')
 const app = require('../app')
 const assert = require('node:assert')
 const Blog = require('../models/blog')
+const helper = require('./test_helper')
 
 const api = supertest(app)
 
-const initialBlogs = [
-  {
-    title: 'Crafting the nuclear material',
-    author: 'Doctor Evil',
-    url: 'www.bigBoom.com',
-    likes: 666
-  },
-  {
-    title: 'Breeding the ground worms',
-    author: 'Foodslier',
-    url: 'www.tastyFood.com',
-    likes: 1,
-  }
-]
-//!!!нужно переделать на Promise.all
 beforeEach(async () => {
   await Blog.deleteMany({})
-  let blogObject = new Blog(initialBlogs[0])
-  await blogObject.save()
-  blogObject = new Blog(initialBlogs[1])
-  await blogObject.save()
+
+  const blogObject = helper.initialBlogs.map(blog => new Blog(blog))
+  const promiseArray = blogObject.map(blog => blog.save())
+  await Promise.all(promiseArray)
 })
 
 test('blog list return as json', async () => {
