@@ -12,8 +12,10 @@ beforeEach(async () => {
   await User.deleteMany({})
   const userObject = new User(helper.initialUsers[0])
   await userObject.save()
+  console.log('cleaned');
 })
-describe.only('Request with a missing username', () => {
+
+describe('Request with a missing username', () => {
   test.only('Returned a Bad request code', async () => {
     newUser = {
       password: 'qwerty',
@@ -62,13 +64,13 @@ describe.only('Request with a missing username', () => {
   })  
 })
 
-describe.only('Request with a non-unique username', () => {
+describe('Request with a non-unique username', () => {
   test.only('Returned a Bad request code', async () => {
     newUser = {
-      username: 'Kaleef_98',
+      username: 'Kaleef_89',
       password: 'qwerty',
       name: 'Kaleef'
-    }
+        }
   
     const result = await api
       .post('/api/users')
@@ -81,10 +83,10 @@ describe.only('Request with a non-unique username', () => {
 
   test.only('Returned an error massage', async () => {  
     newUser = {
-      username: 'Kaleef_98',
+      username: 'Kaleef_89',
       password: 'qwerty',
       name: 'Kaleef'
-    }
+        }
 
     const result = await api
       .post('/api/users')
@@ -98,10 +100,10 @@ describe.only('Request with a non-unique username', () => {
     const usersAtStart = await helper.usersInDb()
 
     newUser = {
-      username: 'Kaleef_98',
+      username: 'Kaleef_89',
       password: 'qwerty',
       name: 'Kaleef'
-    }
+        }
 
     const result = await api
       .post('/api/users')
@@ -115,7 +117,7 @@ describe.only('Request with a non-unique username', () => {
   })
 })
 
-describe.only('Request with a short password', () => {
+describe('Request with a short password', () => {
   test.only('Returned a Bad request code', async () => {
     newUser = {
       username: 'Shura_78',

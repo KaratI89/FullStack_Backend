@@ -15,9 +15,17 @@ const initialBlogs = [
   }
 ]
 
+const testUsers = [
+  {
+    username: 'TestUserName',
+    password: 'qwerty',
+    name: 'TestName'
+  }
+]
+
 const initialUsers = [
   {
-    username: 'Kaleef_98',
+    username: 'Kaleef_89',
     password: 'qwerty',
     name: 'Kaleef'
   }
@@ -28,4 +36,4 @@ const usersInDb = async () => {
   return users.map(user => user.toJSON())
 }
 
-module.exports = {usersInDb, initialUsers, initialBlogs}
+module.exports = {usersInDb, initialUsers, initialBlogs, testUsers}

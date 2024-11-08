@@ -5,7 +5,7 @@ const User = require('../models/user')
 
 logingRouter.post('/', async (request,response) => {
   const { username, password } = request.body
-  console.log(username);
+  // console.log(username);
   
   const user = await User.findOne({ username })
   const passwordCorrect = user ===null

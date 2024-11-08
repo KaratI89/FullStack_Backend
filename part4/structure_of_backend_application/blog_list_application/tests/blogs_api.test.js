@@ -5,15 +5,33 @@ const app = require('../app')
 const assert = require('node:assert')
 const Blog = require('../models/blog')
 const helper = require('./test_helper')
+const User = require('../models/user')
+
 
 const api = supertest(app)
 
-beforeEach(async () => {
-  await Blog.deleteMany({})
+let tokenObject
 
+beforeEach(async () => {
+  await User.deleteMany({})
+  await api
+  .post('/api/users')
+  .send(helper.testUsers[0])
+
+tokenObject = await api 
+  .post('/api/login')
+  .send({ username: helper.testUsers[0].username , password: helper.testUsers[0].password })
+
+  dbUsers = await helper.usersInDb()
+
+  await Blog.deleteMany({})
   const blogObject = helper.initialBlogs.map(blog => new Blog(blog))
+  blogObject = blogObject.map(blog => blog.users = dbUsers[0].id)
+  
   const promiseArray = blogObject.map(blog => blog.save())
   await Promise.all(promiseArray)
+
+
 })
 
 test('blog list return as json', async () => {
@@ -33,6 +51,18 @@ test('unique identifier is named id', async () => {
 })
 
 test('a valid post can be added', async () => {
+console.log('use:  npm run test -- --test-concurrency 1');
+
+  // await api
+  //   .post('/api/users')
+  //   .send(helper.testUsers[0])
+
+  // const tokenObject = await api 
+  //   .post('/api/login')
+  //   .send({ username: helper.testUsers[0].username , password: helper.testUsers[0].password })
+  // console.log(tokenObject.body);
+  
+
   const newPost = {
     title: 'Shoping for clothes',
     author: 'Shopaholic',
@@ -43,13 +73,13 @@ test('a valid post can be added', async () => {
   await api
     .post('/api/blogs')
     .send(newPost)
+    .set('Authorization', `Bearer ${tokenObject.body.token}`)
     .expect(201)
     .expect('Content-Type', /application\/json/)
 
   const listBlogInTheEnd = await api.get('/api/blogs')
-  // console.log(listBlogInTheEnd.body);
   
-  assert.strictEqual(listBlogInTheEnd.body.length, initialBlogs.length + 1)
+  assert.strictEqual(listBlogInTheEnd.body.length, helper.initialBlogs.length + 1)
 
   assert.strictEqual(listBlogInTheEnd.body[listBlogInTheEnd.body.length - 1].title, newPost.title)
 })
@@ -63,6 +93,7 @@ test('likes property is defined', async() => {
   const verifiableBlogs = await api
     .post('/api/blogs')
     .send(blogWithoutLikes)
+    .set('Authorization', `Bearer ${tokenObject.body.token}`)
     .expect(201)
 
   // console.log(verifiableBlogs.body);
@@ -76,15 +107,19 @@ test('missing request properties have a status code Bad Request', async() => {
   const result = await api
     .post('/api/blogs')
     .send(blogWithoutProperties)
+    .set('Authorization', `Bearer ${tokenObject.body.token}`)
     .expect(400)    
   // console.log(result.body);
 })
 
-test('the blog was deleted', async() => {
+test.only('the blog was deleted', async() => {
   const blogsAtStart = await Blog.find({})
-  const deletedBlog = blogsAtStart.map(blog => blog.toJSON())[0]  
+  const deletedBlog = blogsAtStart.map(blog => blog.toJSON())[0] 
+  console.log(deletedBlog);
+  
   await api
     .delete(`/api/blogs/${deletedBlog.id}`)
+    .set('Authorization', `Bearer ${tokenObject.body.token}`)
     .expect(204)
 
   const blogsAtEnd = await Blog.find({})
@@ -99,6 +134,7 @@ test('the blog was changed', async() => {
   const updatedBlog = await api
     .put(`/api/blogs/${changedBlog.id}`)
     .send(changedBlog)
+    .set('Authorization', `Bearer ${tokenObject.body.token}`)
   assert.strictEqual(changedBlog.likes, updatedBlog.body.likes)
 })
 
