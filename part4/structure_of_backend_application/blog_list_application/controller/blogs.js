@@ -36,7 +36,7 @@ response.status(201).json(savedBlog)
 
 blogsRouter.delete('/:id', middleware.userExtractor, async(request, response) => {
   const user = request.user
-  console.log(user);
+  // console.log(user);
   
   const DbBlogObj = await Blog.findById(request.params.id)
   if (!(DbBlogObj)) {

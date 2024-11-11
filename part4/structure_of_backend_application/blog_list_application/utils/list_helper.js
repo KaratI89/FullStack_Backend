@@ -32,4 +32,9 @@ const favoriteBlog = (blogs) => {
   }
 }
 
+const mostBlogs = (blogs) => {
+  const groupBlogs = _.groupBy(blogs, 'author')//это объект с полями именами авторов и массивом их блогов
+  Object.keys(groupBlogs).map(key => groupBlogs[key].reduce((prev, cur) => {},{authour: key, blogs: groupBlogs[key].lengh}))//
+}
+
 module.exports = { dummy , totalLikes, favoriteBlog }

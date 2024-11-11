@@ -12,7 +12,7 @@ beforeEach(async () => {
   await User.deleteMany({})
   const userObject = new User(helper.initialUsers[0])
   await userObject.save()
-  console.log('cleaned');
+  // console.log('cleaned');
 })
 
 describe('Request with a missing username', () => {
@@ -64,8 +64,8 @@ describe('Request with a missing username', () => {
   })  
 })
 
-describe('Request with a non-unique username', () => {
-  test.only('Returned a Bad request code', async () => {
+describe.only('Request with a non-unique username', () => {
+  test('Returned a Bad request code', async () => {
     newUser = {
       username: 'Kaleef_89',
       password: 'qwerty',
@@ -93,10 +93,10 @@ describe('Request with a non-unique username', () => {
       .send(newUser)
     // console.log(result.body.error);
 
-    assert(result.body.error.includes('`username` should be unique'))
+    assert(result.body.error.includes('username should be unique'))
   })
 
-  test.only('Users was not created', async () => {
+  test('Users was not created', async () => {
     const usersAtStart = await helper.usersInDb()
 
     newUser = {

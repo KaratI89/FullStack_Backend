@@ -22,12 +22,11 @@ tokenObject = await api
   .post('/api/login')
   .send({ username: helper.testUsers[0].username , password: helper.testUsers[0].password })
 
-  dbUsers = await helper.usersInDb()
-
   await Blog.deleteMany({})
-  const blogObject = helper.initialBlogs.map(blog => new Blog(blog))
-  blogObject = blogObject.map(blog => blog.users = dbUsers[0].id)
-  
+  const dbUsers = await helper.usersInDb()
+  let idUserBlogObj = helper.initialBlogs
+  idUserBlogObj.forEach(blog => blog.users = dbUsers[0].id)
+  const blogObject = idUserBlogObj.map(blog => new Blog(blog))
   const promiseArray = blogObject.map(blog => blog.save())
   await Promise.all(promiseArray)
 
@@ -51,18 +50,6 @@ test('unique identifier is named id', async () => {
 })
 
 test('a valid post can be added', async () => {
-console.log('use:  npm run test -- --test-concurrency 1');
-
-  // await api
-  //   .post('/api/users')
-  //   .send(helper.testUsers[0])
-
-  // const tokenObject = await api 
-  //   .post('/api/login')
-  //   .send({ username: helper.testUsers[0].username , password: helper.testUsers[0].password })
-  // console.log(tokenObject.body);
-  
-
   const newPost = {
     title: 'Shoping for clothes',
     author: 'Shopaholic',
@@ -112,10 +99,10 @@ test('missing request properties have a status code Bad Request', async() => {
   // console.log(result.body);
 })
 
-test.only('the blog was deleted', async() => {
+test('the blog was deleted', async() => {
   const blogsAtStart = await Blog.find({})
   const deletedBlog = blogsAtStart.map(blog => blog.toJSON())[0] 
-  console.log(deletedBlog);
+  // console.log(deletedBlog); 
   
   await api
     .delete(`/api/blogs/${deletedBlog.id}`)
@@ -136,6 +123,21 @@ test('the blog was changed', async() => {
     .send(changedBlog)
     .set('Authorization', `Bearer ${tokenObject.body.token}`)
   assert.strictEqual(changedBlog.likes, updatedBlog.body.likes)
+})
+
+test.only('adding a blog fails with Unauthorized code', async() => {
+  const newPost = {
+    title: 'Shoping for clothes',
+    author: 'Shopaholic',
+    url: 'www.shopaholic.com',
+    likes: 999999,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newPost)
+    .expect(401)
+    .expect('Content-Type', /application\/json/)
 })
 
 after(async () => {
