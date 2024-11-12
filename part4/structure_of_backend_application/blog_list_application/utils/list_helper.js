@@ -38,7 +38,7 @@ const mostBlogs = (blogs) => {
   const groupBlogs = _.groupBy(blogs, 'author')
   
   const usersList = Object.keys(groupBlogs).map(key => groupBlogs[key].reduce((prev, cur) => prev,{authour: key, blogs: groupBlogs[key].length}))
-  return usersList.reduce((prev, cur) => prev.blogs > cur.blogs ? prev : cur, usersList[0])//
+  return usersList.reduce((prev, cur) => prev.blogs > cur.blogs ? prev : cur, usersList[0])
 }
 
 module.exports = { dummy , totalLikes, favoriteBlog, mostBlogs }
