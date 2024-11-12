@@ -125,7 +125,7 @@ test('the blog was changed', async() => {
   assert.strictEqual(changedBlog.likes, updatedBlog.body.likes)
 })
 
-test.only('adding a blog fails with Unauthorized code', async() => {
+test('adding a blog fails with Unauthorized code', async() => {
   const newPost = {
     title: 'Shoping for clothes',
     author: 'Shopaholic',

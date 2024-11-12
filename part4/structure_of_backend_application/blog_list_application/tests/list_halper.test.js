@@ -93,3 +93,7 @@ describe('favorite blog', () => {
     assert.deepStrictEqual(listHelper.favoriteBlog(listWithLotsOfBlogs), listWithLotsOfBlogs[2])
   })
 })
+
+test.only('top authour', () => {
+  console.log(listHelper.mostBlogs(listWithLotsOfBlogs));
+})

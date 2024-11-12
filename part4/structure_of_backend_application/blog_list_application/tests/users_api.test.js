@@ -16,7 +16,7 @@ beforeEach(async () => {
 })
 
 describe('Request with a missing username', () => {
-  test.only('Returned a Bad request code', async () => {
+  test('Returned a Bad request code', async () => {
     newUser = {
       password: 'qwerty',
       name: 'Kaleef'
@@ -31,7 +31,7 @@ describe('Request with a missing username', () => {
     
   })
   
-  test.only('Returned an error massage', async () => {  
+  test('Returned an error massage', async () => {  
     newUser = {
       password: 'qwerty',
       name: 'Kaleef'
@@ -45,7 +45,7 @@ describe('Request with a missing username', () => {
     assert.strictEqual(result.body.error, 'User validation failed: username: Path `username` is required.')
   })
   
-  test.only('User was not created', async () => {
+  test('User was not created', async () => {
     const usersAtStart = await helper.usersInDb()
     
     newUser = {
@@ -64,7 +64,7 @@ describe('Request with a missing username', () => {
   })  
 })
 
-describe.only('Request with a non-unique username', () => {
+describe('Request with a non-unique username', () => {
   test('Returned a Bad request code', async () => {
     newUser = {
       username: 'Kaleef_89',
@@ -81,7 +81,7 @@ describe.only('Request with a non-unique username', () => {
     
   })
 
-  test.only('Returned an error massage', async () => {  
+  test('Returned an error massage', async () => {  
     newUser = {
       username: 'Kaleef_89',
       password: 'qwerty',
@@ -118,7 +118,7 @@ describe.only('Request with a non-unique username', () => {
 })
 
 describe('Request with a short password', () => {
-  test.only('Returned a Bad request code', async () => {
+  test('Returned a Bad request code', async () => {
     newUser = {
       username: 'Shura_78',
       password: '1',
@@ -134,7 +134,7 @@ describe('Request with a short password', () => {
     
   })
 
-  test.only('Returned an error massage', async () => {  
+  test('Returned an error massage', async () => {  
     newUser = {
       username: 'Shura_78',
       password: '1',
@@ -149,7 +149,7 @@ describe('Request with a short password', () => {
     assert(result.body.error.includes( 'password should be at least 3 characters' ))
   })
 
-  test.only('Users was not created', async () => {
+  test('Users was not created', async () => {
     const usersAtStart = await helper.usersInDb()
 
     newUser = {
