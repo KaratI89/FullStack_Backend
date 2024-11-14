@@ -94,6 +94,10 @@ describe('favorite blog', () => {
   })
 })
 
-test.only('top authour', () => {
+test('top authors of the amount of blogs', () => {
   console.log(listHelper.mostBlogs(listWithLotsOfBlogs));
+})
+
+test.only('top authors of the amount of likes', () => {
+  console.log(listHelper.mostLikes(listWithLotsOfBlogs))
 })

@@ -37,8 +37,22 @@ const favoriteBlog = (blogs) => {
 const mostBlogs = (blogs) => {
   const groupBlogs = _.groupBy(blogs, 'author')
   
-  const usersList = Object.keys(groupBlogs).map(key => groupBlogs[key].reduce((prev, cur) => prev,{authour: key, blogs: groupBlogs[key].length}))
+  const usersList = Object.keys(groupBlogs)
+    .map(key => groupBlogs[key]
+      .reduce((prev, cur) => prev,{authour: key, blogs: groupBlogs[key].length}))
   return usersList.reduce((prev, cur) => prev.blogs > cur.blogs ? prev : cur, usersList[0])
 }
 
-module.exports = { dummy , totalLikes, favoriteBlog, mostBlogs }
+const mostLikes = (blogs) => {
+  const groupBlogs = _.groupBy(blogs, 'author')
+
+  const usersList = Object.keys(groupBlogs)
+  .map(key => groupBlogs[key]
+    .reduce((prev, cur) => {
+      prev.likes = prev.likes + cur.likes
+      return prev
+    },{authour: key, likes: 0}))
+return usersList.reduce((prev, cur) => prev.likes > cur.likes ? prev : cur, usersList[0])
+}
+
+module.exports = { dummy , totalLikes, favoriteBlog, mostBlogs, mostLikes }
